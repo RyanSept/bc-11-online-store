@@ -54,7 +54,8 @@ def shop_exists(shop_name):
 def get_current_user_id():
 	res = g.db.execute('SELECT user_id FROM users WHERE user_name=?',
 		[app.config['USERNAME']]).fetchall()
-
+	if len(res)<=0:
+		return False
 	return res[0][0]
 
 def get_current_user_shops():

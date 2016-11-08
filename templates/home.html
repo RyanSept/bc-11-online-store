@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 <br>
+{% if session.logged_in %}
 <a href="{{url_for('create_store')}}">Create a new store</a>
 <br>
 <table >
@@ -16,4 +17,5 @@
         {% endfor %}
 	</tbody>
 </table>
+{% endif %}
 {% endblock %}

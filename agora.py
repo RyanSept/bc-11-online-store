@@ -130,19 +130,24 @@ def create_store():
 
 		else:
 			g.db.execute('INSERT INTO shop (shop_name, shop_desc, shop_location,shop_url) values(?,?,?,?)',\
-				[form['shopname'],form['shopdescription'],form['shoplocation'],form['shopname'].replace(' ','-')])
+				[form['shopname'],form['shopdescription'],form['shoplocation'],form['shopname'].lower().replace(' ','-')])
 
 			shop_id = g.db.execute('SELECT * FROM shop ORDER BY shop_id DESC LIMIT 1').fetchall()[0][0]
-			
+
 			g.db.execute('INSERT INTO users_shop(shop_id,user_id) values(?,?)',[shop_id, get_current_user_id()])
 			g.db.commit()
 
 		flash('Congratulations on creating your first shop!')
 	return render_template('create-store.html',error=error)
 
-@app.route('/<shopname>')
-def view_shop(shop_name):
-	g.db.execute('SELECT * FROM shops WHERE shop_name=?')
+#returns view for shop
+@app.route('/<shopurl>')
+def view_shop(shopurl):
+	shop_data = g.db.execute('SELECT shop_name,shop_desc,shop_location FROM shop WHERE shop_url=?',[shopurl]).fetchall()
+	error = None
+	if len(shop_data)<=0:
+		abort(404)
+	return render_template('shop.html',shop_data = shop_data, error = error)
 
 if __name__ == '__main__':
 	app.run()

@@ -11,7 +11,8 @@ app.config.update(dict(
     DEBUG=True,
     SECRET_KEY='@agorakey#1',
     USERNAME='admin',
-    PASSWORD='password'
+    PASSWORD='password',
+    SHOP_IN_VIEW=''  #id of shop currently being viewed
 ))
 app.config.from_envvar('AGORA_SETTINGS', silent=True)
 
@@ -56,6 +57,21 @@ def get_current_user_id():
 
 	return res[0][0]
 
+def get_current_user_shops():
+	res = g.db.execute('''
+		SELECT * FROM shop
+		INNER JOIN users_shop
+		ON
+		shop.shop_id=users_shop.shop_id
+		WHERE users_shop.user_id=?
+		''',
+		[get_current_user_id()]).fetchall()
+
+	if len(res)<=0:
+		return False
+
+	return res
+
 
 @app.route('/')
 def homepage():
@@ -67,14 +83,14 @@ def login():
     error = None
     if request.method == 'POST':
     	res = check_password(request.form['username'],request.form['password'])
-    	if res:
-    		app.config['USERNAME'] = request.form['username']
+
         if not res:
         	error = 'Invalid username or password'
         else:
-            session['logged_in'] = True
-            flash('You were logged in')
-            return redirect(url_for('homepage'))
+			app.config['USERNAME'] = request.form['username']
+			session['logged_in'] = True
+			flash('You were logged in')
+			return redirect(url_for('homepage'))
     return render_template('login.html', error=error)
 
 @app.route('/logout')
@@ -137,17 +153,53 @@ def create_store():
 			g.db.execute('INSERT INTO users_shop(shop_id,user_id) values(?,?)',[shop_id, get_current_user_id()])
 			g.db.commit()
 
-		flash('Congratulations on creating your first shop!')
+		flash('Congratulations! Your store has been created!')
 	return render_template('create-store.html',error=error)
 
 #returns view for shop
 @app.route('/<shopurl>')
 def view_shop(shopurl):
-	shop_data = g.db.execute('SELECT shop_name,shop_desc,shop_location FROM shop WHERE shop_url=?',[shopurl]).fetchall()
+	shop_data = g.db.execute('SELECT shop_name,shop_desc,shop_location,shop_id FROM shop WHERE shop_url=?',[shopurl]).fetchall()
 	error = None
 	if len(shop_data)<=0:
 		abort(404)
+	app.config['SHOP_IN_VIEW'] = shop_data[0][3]
 	return render_template('shop.html',shop_data = shop_data, error = error)
+
+@app.route('/add-product', methods=['GET','POST'])
+def add_product():
+	if not session.get('logged_in'):
+		return redirect(url_for('homepage'))
+	error = None
+	if request.method == 'POST':
+		form = request.form
+
+		if not form['producttitle']:
+			error = 'You have to enter a product title.'
+		elif not form['productprice'] :
+			error = 'You did not fill in the product price'
+		elif not form['productdescription']:
+			form['productdescription'] = ''
+		elif not form['productimage']:
+			form['productimage'] = 'uploads/base.png'
+
+		else:
+			g.db.execute('INSERT INTO products (product_title, product_desc, product_price,product_image,creation_date) values(?,?,?,?,datetime())',\
+				[form['producttitle'],form['productdescription'],form['productprice'],form['productimage']])
+
+			product_id = g.db.execute('SELECT * FROM products ORDER BY product_id DESC LIMIT 1').fetchall()[0][0]
+
+			g.db.execute('INSERT INTO shop_products(product_id,shop_id) values(?,?)',[product_id, form['productshop']])
+			g.db.commit()
+
+		flash('Your product has been published!')
+	
+	user_shops = get_current_user_shops()
+	
+	return render_template('add-product.html',error=error, user_shops=user_shops)
 
 if __name__ == '__main__':
 	app.run()
+
+
+

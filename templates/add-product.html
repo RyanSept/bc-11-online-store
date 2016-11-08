@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block body %}
+  <h2>Add product</h2>
+  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  <form action="{{ url_for('add_product') }}" method=post>
+    <dl>
+        <dt>Product name: </dt>
+        <dd><input type=text name="producttitle">
+            
+        <dt>Product description:
+        <dd><input type=textarea name="productdescription">
+        
+        <dt>Product price:
+        <dd><input type=text name="productprice">
+            
+        <dt>Product image:
+        <dd><input type=text name="productimage">
+        
+        <dt>Shop to add products
+        <dd><select name="productshop">
+            {%for shop in user_shops%}
+            <option value={{shop[0]}}>{{shop[1]}}</option>
+            {% endfor %}
+            </select>
+            
+        <dd><input type=submit value="Add product">
+        
+        
+        
+    </dl>
+  </form>
+{% endblock %}

@@ -1,4 +1,19 @@
 {% extends "layout.html" %}
 {% block body %}
-<p>This is the homepage.</p>
+<br>
+<a href="{{url_for('create_store')}}">Create a new store</a>
+<br>
+<table >
+    <tbody>
+		<tr>
+			<td><strong>My stores</strong></td>
+		</tr>
+        {% for shop in user_shops%}
+		<tr>
+			<td>{{ shop[1] }}</td>
+			<td><a href="{{ url_for('view_shop',shopurl=shop[4]) }}">Edit</a></td>
+		</tr>
+        {% endfor %}
+	</tbody>
+</table>
 {% endblock %}

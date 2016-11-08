@@ -75,8 +75,8 @@ def get_current_user_shops():
 
 @app.route('/')
 def homepage():
-	flash(str(get_current_user_id()))
-	return render_template('home.html')
+	user_shops = get_current_user_shops()
+	return render_template('home.html',user_shops=user_shops)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -96,6 +96,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
+    app.config['USERNAME'] = ''
     flash('You were logged out')
     return redirect(url_for('homepage'))
 
@@ -197,6 +198,7 @@ def add_product():
 	user_shops = get_current_user_shops()
 	
 	return render_template('add-product.html',error=error, user_shops=user_shops)
+
 
 if __name__ == '__main__':
 	app.run()

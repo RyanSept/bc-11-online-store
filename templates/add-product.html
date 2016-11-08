@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
+{{user_shops}}
   <h2>Add product</h2>
   {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
   <form action="{{ url_for('add_product') }}" method=post>

@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block body %}
+  <h2>Create store</h2>
+  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  <form action="{{ url_for('create_store') }}" method=post>
+    <dl>
+        <dt>Store name: </dt>
+        <dd><input type=text name="shopname">
+            
+        <dt>Store Description:
+        <dd><input type=textarea name="shopdescription">
+        
+        <dt>Store Address:
+        <dd><input type=text name="shoplocation">
+            
+        <dd><input type=submit value="Create Store">
+        
+    </dl>
+  </form>
+{% endblock %}

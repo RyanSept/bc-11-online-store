@@ -5,4 +5,11 @@
 <p>{{shop_data[0][2]}}</p>
 <a href="{{url_for('add_product')}}">Add new product to store</a>
 
+<!-- Products -->
+{% if products %}
+    {% for product in products %}
+    <p>{{ product[1] }}</p>
+    {% endfor %}
+{% endif %}
+
 {% endblock %}

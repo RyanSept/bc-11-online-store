@@ -73,6 +73,20 @@ def get_current_user_shops():
 
 	return res
 
+def get_shop_products(shop_id):
+	res = g.db.execute('''
+		SELECT * FROM products
+		INNER JOIN shop_products
+		ON
+		products.product_id=shop_products.product_id
+		WHERE shop_products.shop_id=?
+		''',
+		[shop_id]).fetchall()
+
+	if len(res)<=0:
+		return False
+
+	return res
 
 @app.route('/')
 def homepage():
@@ -121,7 +135,7 @@ def sign_up():
             error = 'The username is already taken'
         if not error:
             g.db.execute('''insert into users (
-              username, user_email, user_password) values (?, ?, ?)''',
+              user_name, user_email, user_password) values (?, ?, ?)''',
               [request.form['username'], request.form['email'],
                request.form['password']])
             g.db.commit()
@@ -166,7 +180,10 @@ def view_shop(shopurl):
 	if len(shop_data)<=0:
 		abort(404)
 	app.config['SHOP_IN_VIEW'] = shop_data[0][3]
-	return render_template('shop.html',shop_data = shop_data, error = error)
+
+	products = get_shop_products(shop_data[0][3])
+
+	return render_template('shop.html',shop_data = shop_data, error = error, products = products)
 
 @app.route('/add-product', methods=['GET','POST'])
 def add_product():

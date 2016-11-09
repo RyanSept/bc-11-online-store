@@ -4,6 +4,7 @@
 {% if session.logged_in %}
 <a href="{{url_for('create_store')}}">Create a new store</a>
 <br>
+    {% if user_shops %}
 <table >
     <tbody>
 		<tr>
@@ -17,5 +18,10 @@
         {% endfor %}
 	</tbody>
 </table>
+    {% else %}
+    <p>You have no stores yet.</p>
+    {% endif %}
+{% else %}
+<p>or <a href="{{ url_for('sign_up') }}">sign up</a></p>
 {% endif %}
 {% endblock %}

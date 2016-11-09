@@ -1,9 +1,8 @@
 {% extends "layout.html" %}
 {% block body %}
-{{user_shops}}
   <h2>Add product</h2>
   {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
-  <form action="{{ url_for('add_product') }}" method=post>
+  <form action="{{ url_for('add_product') }}" method="POST" enctype="multipart/form-data" >
     <dl>
         <dt>Product name: </dt>
         <dd><input type=text name="producttitle">
@@ -15,8 +14,8 @@
         <dd><input type=text name="productprice">
             
         <dt>Product image:
-        <dd><input type=text name="productimage">
-        
+        <dd><input type=file name="productimage" >
+            
         <dt>Shop to add products
         <dd><select name="productshop">
             {%for shop in user_shops%}

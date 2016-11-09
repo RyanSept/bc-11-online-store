@@ -1,7 +1,8 @@
 import os
 import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, \
-abort, render_template, flash
+abort, render_template, flash, send_from_directory
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -12,7 +13,9 @@ app.config.update(dict(
     SECRET_KEY='@agorakey#1',
     USERNAME='admin',
     PASSWORD='password',
-    SHOP_IN_VIEW=''  #id of shop currently being viewed
+    SHOP_IN_VIEW='',  #id of shop currently being viewed
+    UPLOAD_FOLDER = 'uploads/',
+    ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 ))
 app.config.from_envvar('AGORA_SETTINGS', silent=True)
 
@@ -227,6 +230,7 @@ def add_product():
 
 	if request.method == 'POST':
 		form = request.form
+		filename = 'base.png'
 
 		if not form['producttitle']:
 			error = 'You have to enter a product title.'
@@ -234,20 +238,24 @@ def add_product():
 			error = 'You did not fill in the product price'
 		elif not form['productdescription']:
 			form['productdescription'] = ''
-		elif not form['productimage']:
-			form['productimage'] = 'uploads/base.png'
 
 		else:
+			if 'file' not in request.files:
+				uploaded = upload_file(request)
+				if uploaded[0]:
+					filename = uploaded[1]
+				else:
+					error = uploaded[1]
 			product_url = form['producttitle'].lower().replace(' ','-')
 			g.db.execute('INSERT INTO products (product_title, product_desc, product_price,product_image,creation_date,product_url) values(?,?,?,?,datetime(),?)',\
-				[form['producttitle'],form['productdescription'],form['productprice'],form['productimage'],product_url])
+				[form['producttitle'],form['productdescription'],form['productprice'],filename,product_url])
 
 			product_id = g.db.execute('SELECT * FROM products ORDER BY product_id DESC LIMIT 1').fetchall()[0][0]
 
 			g.db.execute('INSERT INTO shop_products(product_id,shop_id) values(?,?)',[product_id, form['productshop']])
 			g.db.commit()
 
-		flash('Your product has been published!')
+			flash('Your product has been published!')
 	
 	return render_template('add-product.html',error=error, user_shops=user_shops)
 
@@ -263,10 +271,32 @@ def view_product(shopurl, producturl):
 	else:
 		abort(404)
 
-	
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+
+def upload_file(request):
+    # check if the post request has the file part
+
+    file = request.files['productimage']
+    # if user does not select file, browser also
+    # submit a empty part without filename
+    if file.filename == '':
+        return (False,'No file selected')
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+        return (True,filename)
+    return (False,'Upload error')
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
 
 if __name__ == '__main__':
 	app.run()
-
 
 

@@ -1,11 +1,15 @@
 {% extends "layout.html" %}
 {% block body %}
-<br>
+
+<div class="jumbotron home-jumbo">
+    <h3>Welcome to Agora</h3>
+</div>
+<div class="container">
 {% if session.logged_in %}
 <a href="{{url_for('create_store')}}">Create a new store</a>
 <br>
     {% if user_shops %}
-<table >
+<table class="table">
     <tbody>
 		<tr>
 			<td><strong>My stores</strong></td>
@@ -22,7 +26,6 @@
     {% else %}
     <p>You have no stores yet.</p>
     {% endif %}
-{% else %}
-<p>or <a href="{{ url_for('sign_up') }}">sign up</a></p>
 {% endif %}
+</div>
 {% endblock %}

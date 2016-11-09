@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
+<div class="container">
 <h1>{{shop_data[0][0]}}</h1>
 <p>{{shop_data[0][1]}}</p>
 <p>{{shop_data[0][2]}}</p>
@@ -17,7 +18,7 @@
     }
 </style>
 {% if session.logged_in %}
-<table >
+<table class="table">
     <tbody>
         <tr id="product-table-row-headers">
             <td>id</td>
@@ -51,5 +52,5 @@
 </div>
 {% endif %}
 {% endif %}
-
+</div>
 {% endblock %}

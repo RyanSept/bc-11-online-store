@@ -11,9 +11,45 @@
 
 <!-- Products -->
 {% if products %}
+<style>
+    #product-table-row-headers td{
+        font-weight:bold;
+    }
+</style>
+{% if session.logged_in %}
+<table >
+    <tbody>
+        <tr id="product-table-row-headers">
+            <td>id</td>
+            <td>Product name</td>
+            <td>Product description</td>
+            <td>Product price</td>
+            <td>Date created</td>
+        </tr>
     {% for product in products %}
-    <p><a href="{{ url_for('view_product',shopurl=shop_url,producturl=product[6]) }}">{{ product[1] }}</a></p>
+        <tr>
+            <td>{{ product[0] }}</td>
+            <td>{{ product[1] }}</td><!-- product name -->
+            <td>{{ product[2] }}</td><!-- product desc -->
+            <td>{{ product[3] }}</td><!-- product price -->
+            <td>{{ product[5] }}</td><!-- product creation date -->
+            <td><a href="{{ url_for('view_product',shopurl=shop_url,producturl=product[6]) }}">View</a></td>
+            <td><a href="{{ url_for('remove_product',shopurl=shop_url, product_id=product[0]) }}">Delete</a></td>
+        </tr>
+    
     {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div>
+{% for product in products %}
+    <span>
+        <img src ="{{ url_for('uploaded_file',filename=product[4]) }}"/>
+        {{ product[1] }}{{ product[3] }}
+    </span>
+{% endfor %}
+</div>
+{% endif %}
 {% endif %}
 
 {% endblock %}

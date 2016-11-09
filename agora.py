@@ -104,8 +104,11 @@ def owns_shop_in_view(shop_id):
 
 #check if product in shop
 def product_in_shop(shop_url,product_url):
-	shop_id = g.db.execute('SELECT shop_id FROM shop WHERE shop_url=?',[shop_url]).fetchall()[0][0]
-	product_id = g.db.execute('SELECT product_id FROM products WHERE product_url=?',[product_url]).fetchall()[0][0]
+	try:
+		shop_id = g.db.execute('SELECT shop_id FROM shop WHERE shop_url=?',[shop_url]).fetchall()[0][0]
+		product_id = g.db.execute('SELECT product_id FROM products WHERE product_url=?',[product_url]).fetchall()[0][0]
+	except:
+		return False
 
 	if not shop_id or not product_id:
 		return False
@@ -308,10 +311,17 @@ def upload_file(request):
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
+
 @app.route('/?shop_id=<shop_id>')
 def remove_shop(shop_id):
 	delete_shop(shop_id)
 	return redirect(url_for('homepage'))
+
+@app.route('/<shopurl>/?product_id=<product_id>')
+def remove_product(shopurl,product_id):
+	delete_product(product_id)
+	return redirect(url_for('view_shop',shopurl=shopurl))
+
 
 if __name__ == '__main__':
 	app.run()

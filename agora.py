@@ -121,6 +121,19 @@ def get_shop_url(shop_id):
 	res = g.db.execute('SELECT shop_url from shop WHERE shop.shop_id=?',[shop_id]).fetchall()
 	return res
 
+def delete_shop(shop_id):
+	g.db.execute('DELETE FROM shop WHERE shop_id=?',[shop_id])
+	g.db.execute('DELETE FROM users_shop WHERE shop_id=?',[shop_id])
+	shop_products = get_shop_products(shop_id) #get associated products
+	for product in shop_products:
+		delete_product(product[0])#delete associated products
+	g.db.commit()
+
+def delete_product(product_id):
+	g.db.execute('DELETE FROM products WHERE product_id=?',[product_id])
+	g.db.execute('DELETE FROM shop_products WHERE product_id=?',[product_id])#delete from intersection table
+	g.db.commit()
+
 @app.route('/')
 def homepage():
 	user_shops = get_current_user_shops()
@@ -295,6 +308,10 @@ def upload_file(request):
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
+@app.route('/?shop_id=<shop_id>')
+def remove_shop(shop_id):
+	delete_shop(shop_id)
+	return redirect(url_for('homepage'))
 
 if __name__ == '__main__':
 	app.run()

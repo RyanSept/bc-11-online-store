@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+{% block body %}
+<a href="{{ url_for('view_shop',shopurl=shop_url) }}">Back to shop</a>
+<h1>{{ product_data[0][0] }}</h1>
+<p>{{ product_data[0][1] }}</p>
+<p>{{ product_data[0][2] }}</p>
+<p>{{ product_data[0][3] }}</p>
+{% endblock %}

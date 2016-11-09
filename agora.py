@@ -73,6 +73,7 @@ def get_current_user_shops():
 
 	return res
 
+#gets products for specified shop
 def get_shop_products(shop_id):
 	res = g.db.execute('''
 		SELECT * FROM products
@@ -86,6 +87,35 @@ def get_shop_products(shop_id):
 	if len(res)<=0:
 		return False
 
+	return res
+
+#checks if user owns a specific shop
+def owns_shop_in_view(shop_id):
+	user_id = get_current_user_id()
+	res = g.db.execute('SELECT user_id FROM users_shop WHERE shop_id=?',[shop_id]).fetchall()
+
+	for row in res:
+		if row[0] == user_id: #row[0]=user_id
+			return True
+	return False
+
+#check if product in shop
+def product_in_shop(shop_url,product_url):
+	shop_id = g.db.execute('SELECT shop_id FROM shop WHERE shop_url=?',[shop_url]).fetchall()[0][0]
+	product_id = g.db.execute('SELECT product_id FROM products WHERE product_url=?',[product_url]).fetchall()[0][0]
+
+	if not shop_id or not product_id:
+		return False
+
+	res = g.db.execute('SELECT * FROM shop_products WHERE shop_id=? AND product_id=?',[shop_id,product_id]).fetchall()
+
+	if len(res)<=0:
+		return False
+	return True
+
+#returns url of specified shop
+def get_shop_url(shop_id):
+	res = g.db.execute('SELECT shop_url from shop WHERE shop.shop_id=?',[shop_id]).fetchall()
 	return res
 
 @app.route('/')
@@ -179,17 +209,22 @@ def view_shop(shopurl):
 	error = None
 	if len(shop_data)<=0:
 		abort(404)
-	app.config['SHOP_IN_VIEW'] = shop_data[0][3]
+	shop_id = app.config['SHOP_IN_VIEW'] = shop_data[0][3]
 
-	products = get_shop_products(shop_data[0][3])
+	products = get_shop_products(shop_id)
 
-	return render_template('shop.html',shop_data = shop_data, error = error, products = products)
+	owns_shop = owns_shop_in_view(shop_id)
+
+	return render_template('shop.html',shop_data = shop_data, error = error, products = products, owns_shop = owns_shop, shop_url = shopurl)
 
 @app.route('/add-product', methods=['GET','POST'])
 def add_product():
 	if not session.get('logged_in'):
 		return redirect(url_for('homepage'))
+
 	error = None
+	user_shops = get_current_user_shops()
+
 	if request.method == 'POST':
 		form = request.form
 
@@ -203,8 +238,9 @@ def add_product():
 			form['productimage'] = 'uploads/base.png'
 
 		else:
-			g.db.execute('INSERT INTO products (product_title, product_desc, product_price,product_image,creation_date) values(?,?,?,?,datetime())',\
-				[form['producttitle'],form['productdescription'],form['productprice'],form['productimage']])
+			product_url = form['producttitle'].lower().replace(' ','-')
+			g.db.execute('INSERT INTO products (product_title, product_desc, product_price,product_image,creation_date,product_url) values(?,?,?,?,datetime(),?)',\
+				[form['producttitle'],form['productdescription'],form['productprice'],form['productimage'],product_url])
 
 			product_id = g.db.execute('SELECT * FROM products ORDER BY product_id DESC LIMIT 1').fetchall()[0][0]
 
@@ -213,10 +249,21 @@ def add_product():
 
 		flash('Your product has been published!')
 	
-	user_shops = get_current_user_shops()
-	
 	return render_template('add-product.html',error=error, user_shops=user_shops)
 
+@app.route('/<shopurl>/<producturl>')
+def view_product(shopurl, producturl):
+	if product_in_shop(shopurl, producturl):
+		product_data = g.db.execute('SELECT product_title,product_image,product_desc,product_price,product_id,product_url FROM products WHERE product_url=?',[producturl]).fetchall()
+		error = None
+
+		product_id = product_data[0][4]
+		return render_template('product.html',product_data = product_data, error = error, shop_url = shopurl)
+
+	else:
+		abort(404)
+
+	
 
 if __name__ == '__main__':
 	app.run()

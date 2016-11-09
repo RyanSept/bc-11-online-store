@@ -3,12 +3,16 @@
 <h1>{{shop_data[0][0]}}</h1>
 <p>{{shop_data[0][1]}}</p>
 <p>{{shop_data[0][2]}}</p>
+{% if session.logged_in %}
+    {% if owns_shop%}
 <a href="{{url_for('add_product')}}">Add new product to store</a>
+    {% endif %}
+{% endif %}
 
 <!-- Products -->
 {% if products %}
     {% for product in products %}
-    <p>{{ product[1] }}</p>
+    <p><a href="{{ url_for('view_product',shopurl=shop_url,producturl=product[6]) }}">{{ product[1] }}</a></p>
     {% endfor %}
 {% endif %}
 

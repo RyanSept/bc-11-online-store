@@ -13,7 +13,7 @@
         {% for shop in user_shops%}
 		<tr>
 			<td>{{ shop[1] }}</td>
-			<td><a href="{{ url_for('view_shop',shopurl=shop[4]) }}">Edit</a></td>
+			<td><a href="{{ url_for('view_shop',shopurl=shop[4]) }}">View</a></td>
 		</tr>
         {% endfor %}
 	</tbody>

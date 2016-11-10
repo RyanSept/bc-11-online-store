@@ -13,7 +13,7 @@
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
-                  <a class="navbar-brand" href="{{ url_for('homepage') }}">Agora</a>
+                  <a class="pull-left" href="{{ url_for('homepage') }}"><img height="65"src="{{  url_for('static',filename='logo.png') }}"></a>
                 </div>
                 <ul class="nav navbar-nav">
                 </ul>
@@ -24,14 +24,14 @@
                     <li><a href="{{ url_for('sign_up') }}"><span class="glyphicon glyphicon-log-in"></span> sign up</a></li>
                     {% else %}
                     <li><a href="#">{{config['USERNAME']}}</a></li>
-                    <li><a href="{{ url_for('logout') }}">log out</a></li>
+                    <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span> log out</a></li>
                      {% endif %}
                 </ul>
             </div>
         </nav>
  
         {% for message in get_flashed_messages() %}
-        <div class=flash>{{ message }}</div>
+        <div class="flash alert alert-info">{{ message }}</div>
         {% endfor %}
         {% block body %}{% endblock %}
  

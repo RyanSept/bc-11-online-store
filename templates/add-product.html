@@ -1,20 +1,21 @@
 {% extends "layout.html" %}
 {% block body %}
-  <h2>Add product</h2>
-  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+<div class="container form-container col-md-4 col-md-offset-4">
+  <h3>Add a product to the shop</h3>
+  {% if error %}<p class="flash alert alert-danger error"><strong>Error:</strong> {{ error }}{% endif %}
   <form action="{{ url_for('add_product') }}" method="POST" enctype="multipart/form-data" >
     <dl>
         <dt>Product name: </dt>
         <dd><input type=text name="producttitle">
             
         <dt>Product description:
-        <dd><input type=textarea name="productdescription">
+        <dd><textarea type=textarea name="productdescription"></textarea>
         
         <dt>Product price:
         <dd><input type=text name="productprice">
             
         <dt>Product image:
-        <dd><input type=file name="productimage" >
+        <dd><input class="btn btn-default form-btn" type=file name="productimage" >
             
         <dt>Shop to add products
         <dd><select name="productshop">
@@ -23,10 +24,11 @@
             {% endfor %}
             </select>
             
-        <dd><input type=submit value="Add product">
+        <dd><input class="btn btn-default form-btn" type=submit value="Add product">
         
         
         
     </dl>
   </form>
+</div>
 {% endblock %}

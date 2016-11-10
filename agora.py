@@ -272,7 +272,11 @@ def add_product():
 			g.db.commit()
 
 			flash('Your product has been published!')
-	
+
+			shopurl = get_shop_url(form['productshop'])[0][0]
+
+			return redirect(url_for('view_shop',shopurl=shopurl))
+
 	return render_template('add-product.html',error=error, user_shops=user_shops)
 
 @app.route('/<shopurl>/<producturl>')

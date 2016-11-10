@@ -1,9 +1,19 @@
 {% extends "layout.html" %}
 {% block body %}
+<script src="{{ url_for('static',filename='datatables.min.js') }}"></script>
+<script>
+$(document).ready(function() {
+    $('.table').DataTable();
+} 
+);
+</script>
 <div class="container">
 <h1>{{shop_data[0][0]}}</h1>
-<p>{{shop_data[0][1]}}</p>
-<p>{{shop_data[0][2]}}</p>
+<button type="button" class="btn btn-default about-shop-btn" data-toggle="collapse" data-target="#about-shop">About the shop</button>
+<div id="about-shop" class="collapse">
+    <p><h4>Description</h4>{{shop_data[0][1]}}</p>
+    <p><h4>Address</h4>{{shop_data[0][2]}}</p>
+</div>
 {% if session.logged_in %}
     {% if owns_shop%}
 <a href="{{url_for('add_product')}}">Add new product to store</a>
@@ -18,15 +28,19 @@
     }
 </style>
 {% if session.logged_in %}
-<table class="table">
-    <tbody>
+<table class="table products-table">
+    <thead>
         <tr id="product-table-row-headers">
-            <td>id</td>
-            <td>Product name</td>
-            <td>Product description</td>
-            <td>Product price</td>
-            <td>Date created</td>
+            <th>id <span class="glyphicon glyphicon-sort-by-attributes"></span></th>
+            <th>Product name <span class="glyphicon glyphicon-sort-by-attributes"></span></th>
+            <th>Product description <span class="glyphicon glyphicon-sort-by-attributes"></span></th>
+            <th>Product price <span class="glyphicon glyphicon-sort-by-attributes"></span></th>
+            <th>Date created <span class="glyphicon glyphicon-sort-by-attributes"></span></th>
+            <th>View</th>
+            <th>Delete</th>
         </tr>
+    </thead>
+    <tbody>
     {% for product in products %}
         <tr>
             <td>{{ product[0] }}</td>
@@ -41,15 +55,18 @@
     {% endfor %}
     </tbody>
 </table>
+
 {% else %}
-<div>
+<div class="products-listing container">
 {% for product in products %}
-    <span>
-        <img src ="{{ url_for('uploaded_file',filename=product[4]) }}"/>
-        {{ product[1] }}{{ product[3] }}
-    </span>
+    <div class="col-sm-4">
+        <img height="220" src ="{{ url_for('uploaded_file',filename=product[4]) }}"/>
+        <h4><a href="{{ url_for('view_product',shopurl=shop_url,producturl=product[6]) }}">{{ product[1] }}</a></h4>
+        <p id="price">{{ product[3] }} Kshs</p>
+        <button type="button" class="btn btn-success">Add to cart</button>
+    </div>
 {% endfor %}
-</div>
+</div><!-- end of products-listing -->
 {% endif %}
 {% endif %}
 </div>

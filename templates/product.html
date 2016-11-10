@@ -1,16 +1,25 @@
 {% extends "layout.html" %}
 {% block body %}
 <div class="container">
+    <a href="{{ url_for('view_shop',shopurl=shop_url) }}">Back to shop</a>
     <div class="row">
         <div class="col-md-6">
-            <a href="{{ url_for('view_shop',shopurl=shop_url) }}">Back to shop</a>
-            <h1>{{ product_data[0][0] }}</h1>
             <img class="img-rounded" width="400" src ="{{ url_for('uploaded_file',filename=product_data[0][1]) }}"/>
         </div>
         
         <div class="col-md-4">
+            <div class="summary">
+                <h2>{{ product_data[0][0] }}</h2>
+                <p id="price">{{ product_data[0][3] }} Kshs</p>
+            </div>
+            <button type="button" class="btn btn-success">Add to cart</button>
+        </div>
+    </div>
+    
+    <div class="row description">
+        <div class="col-md-12">
+            <h3>Description</h3>
             <p>{{ product_data[0][2] }}</p>
-            <p>{{ product_data[0][3] }}</p>
         </div>
     </div>
 </div>

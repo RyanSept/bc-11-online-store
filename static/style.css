@@ -1,3 +1,72 @@
+body{
+    background-color: #F9F9F9
+}
 .navbar {
     margin-bottom: 0px;
+}
+.navbar-default{
+    background-color: #222222;
+}
+
+#price{
+    color: #77a464;
+    font-size: 1.25em
+}
+
+.about-shop-btn{
+    margin-bottom: 20px;
+    border-color: #77a464;
+}
+
+.form-container{  
+    background: white;
+    margin-top: 20px;
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.13);
+    box-shadow: 0 1px 3px rgba(0,0,0,.13);
+}
+
+input[type=text],input[type=password], input[type=search],textarea{
+    font-size:18px;
+    padding:10px 10px 10px 5px;
+    display:block;
+    width:300px;
+    border:none;
+    border-bottom:1px solid #77a464;
+    transition: border-bottom-width 0.3s;
+}
+input[type=search]{
+    display:inline;
+    background: rgba(0,0,0,0);
+}
+input[type=text]:focus, input[type=password]:focus, input[type=search]:focus,textarea:focus{ 
+    outline:none; 
+    border-bottom-width: 2px;
+}
+
+form dt{
+    font-weight: 100;
+    color: #72777c;
+    margin-top: 10px;
+}
+
+form dd{
+    margin-top: 10px;
+}
+
+.flash{
+    margin-bottom: 0px;
+}
+
+.navbar-default .navbar-nav > li > a:hover{
+    color: white;
+}
+.products-table{
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.13);
+    box-shadow: 0 1px 3px rgba(0,0,0,.13);
+    padding: 10px 5px 10px 5px;
+    background-color: white
+}
+
+.products-table th, .products-table td{
+    border-top: none !important;
 }

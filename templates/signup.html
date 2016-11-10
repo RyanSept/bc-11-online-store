@@ -1,7 +1,8 @@
 {% extends "layout.html" %}
 {% block body %}
-  <h2>Signup</h2>
-  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+<div class="container form-container col-md-4 col-md-offset-4">
+  <h3>Signup</h3>
+  {% if error %}<p class="flash alert alert-danger error"><strong>Error:</strong> {{ error }}{% endif %}
   <form action="{{ url_for('sign_up') }}" method=post>
     <dl>
         <dt>Email: </dt>
@@ -16,8 +17,9 @@
         <dt>Re-enter password to confirm:
         <dd><input type=password name=password2>
             
-        <dd><input type=submit value=signup>
+        <dd><input class="btn btn-default form-btn" type=submit value=signup>
         
     </dl>
   </form>
+</div>
 {% endblock %}

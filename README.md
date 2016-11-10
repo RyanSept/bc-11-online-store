@@ -3,6 +3,8 @@
 ##Introduction
 Agora is a Flask based online store platform. It allow users to create online stores. Each store has a shareable url and so does every store  eg. http://agora-store.herokuapp.com/my-shop/black-hat . When a user accesses your store, they are able to see products you have added. To add products, you need an agora account. Once you have added this, you can create a store adding its name, description and address. Upon doing this you can add a product item to the store along with its description, image and price. Agora also offers you and your customers a clean and easy to use interface.
 
+Heroku link: http://agora-store.herokuapp.com
+
 ##Dependencies
 ---
 ###Back-end

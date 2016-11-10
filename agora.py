@@ -112,7 +112,7 @@ def get_current_user_shops():
 
 def get_shop_products(shop_id):
 	'''
-	gets products for specified shop
+	gets all products for specified shop
 	'''
 
 	#joins where ids intersect
@@ -130,21 +130,33 @@ def get_shop_products(shop_id):
 
 	return res
 
-#checks if user owns a specific shop
 def owns_shop_in_view(shop_id):
+	'''
+	checks if user owns a specific shop
+	returns bool
+	'''
 	user_id = get_current_user_id()
-	res = g.db.execute('SELECT user_id FROM users_shop WHERE shop_id=?',[shop_id]).fetchall()
+	res = g.db.execute('''
+		SELECT user_id FROM users_shop WHERE shop_id=?
+		''',[shop_id]).fetchall()
 
 	for row in res:
 		if row[0] == user_id: #row[0]=user_id
 			return True
 	return False
 
-#check if product in shop
+
 def product_in_shop(shop_url,product_url):
+	'''
+	check if product is in shop
+	'''
 	try:
-		shop_id = g.db.execute('SELECT shop_id FROM shop WHERE shop_url=?',[shop_url]).fetchall()[0][0]
-		product_id = g.db.execute('SELECT product_id FROM products WHERE product_url=?',[product_url]).fetchall()[0][0]
+		shop_id = g.db.execute('''
+			SELECT shop_id FROM shop WHERE shop_url=?
+			''',[shop_url]).fetchall()[0][0]
+		product_id = g.db.execute('''
+			SELECT product_id FROM products WHERE product_url=?
+			''',[product_url]).fetchall()[0][0]
 	except:
 		return False
 
@@ -153,26 +165,35 @@ def product_in_shop(shop_url,product_url):
 
 	res = g.db.execute('SELECT * FROM shop_products WHERE shop_id=? AND product_id=?',[shop_id,product_id]).fetchall()
 
-	if len(res)<=0:
+	if len(res) <= 0:
 		return False
 	return True
 
-#returns url of specified shop
+
 def get_shop_url(shop_id):
+	'''
+	returns url of specified shop
+	'''
 	res = g.db.execute('SELECT shop_url from shop WHERE shop.shop_id=?',[shop_id]).fetchall()
 	return res
 
 def delete_shop(shop_id):
+	'''
+	deletes shop given on id
+	'''
 	g.db.execute('DELETE FROM shop WHERE shop_id=?',[shop_id])
 	g.db.execute('DELETE FROM users_shop WHERE shop_id=?',[shop_id])
 	shop_products = get_shop_products(shop_id) #get associated products
-	for product in shop_products:
-		delete_product(product[0])#delete associated products
+
+	if shop_products:
+		for product in shop_products:
+			delete_product(product[0])#delete associated products
 	g.db.commit()
 
 def delete_product(product_id):
 	g.db.execute('DELETE FROM products WHERE product_id=?',[product_id])
-	g.db.execute('DELETE FROM shop_products WHERE product_id=?',[product_id])#delete from intersection table
+	#delete from intersection table
+	g.db.execute('DELETE FROM shop_products WHERE product_id=?',[product_id])
 	g.db.commit()
 
 @app.route('/')
@@ -193,22 +214,25 @@ def login():
         else:
 			app.config['USERNAME'] = request.form['username']
 			session['logged_in'] = True
-			flash('You were logged in')
+			flash('You are logged in as ' + app.config['USERNAME'])
 			return redirect(url_for('homepage'))
+
     return render_template('login.html', error=error)
 
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
     app.config['USERNAME'] = ''
-    flash('You were logged out')
+    flash('You are logged out')
     return redirect(url_for('homepage'))
 
 @app.route('/signup', methods=['GET', 'POST'])
 def sign_up():
     """Registers the user."""
+
     if session.get('logged_in'):
         return redirect(url_for('homepage'))
+
     error = None
     if request.method == 'POST':
         if not request.form['username']:
@@ -230,6 +254,7 @@ def sign_up():
             g.db.commit()
             flash('You were successfully registered and can login now')
             return redirect(url_for('login'))
+
     return render_template('signup.html', error=error)
 
 @app.route('/create-store', methods=['GET','POST'])
@@ -250,8 +275,11 @@ def create_store():
 			form['shopdescription'] = ''
 
 		else:
-			g.db.execute('INSERT INTO shop (shop_name, shop_desc, shop_location,shop_url) values(?,?,?,?)',\
-				[form['shopname'],form['shopdescription'],form['shoplocation'],form['shopname'].lower().replace(' ','-')])
+			g.db.execute('''
+				INSERT INTO shop (shop_name, shop_desc, shop_location,shop_url) values(?,?,?,?)
+				''',
+				[form['shopname'],form['shopdescription'],
+				form['shoplocation'],form['shopname'].lower().replace(' ','-')])
 
 			shop_id = g.db.execute('SELECT * FROM shop ORDER BY shop_id DESC LIMIT 1').fetchall()[0][0]
 
@@ -259,6 +287,8 @@ def create_store():
 			g.db.commit()
 
 		flash('Congratulations! Your store has been created!')
+		return redirect(url_for('homepage'))
+
 	return render_template('create-store.html',error=error)
 
 #returns view for shop

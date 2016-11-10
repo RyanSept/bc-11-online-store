@@ -20,7 +20,10 @@
     <tbody>
         {% for shop in user_shops%}
 		<tr>
-			<td>{{ shop[1] }}</td>
+			<td>
+                <img height="32" src="{{ url_for('static',filename='gravatar.png') }}"/>
+                {{ shop[1] }}
+            </td>
 			<td><a href="{{ url_for('view_shop',shopurl=shop[4]) }}">View</a></td>
             <td><a href="{{ url_for('remove_shop',shop_id=shop[0]) }}">Delete</a></td>
 		</tr>
@@ -31,7 +34,7 @@
     <p>You have no stores yet.</p>
     {% endif %}
 {% else %}  
-<p>All the shops on Agora</p>
+<p>Here are all the shops on Agora. Click the link to view the products in them.</p>
     
 <table class="table all-stores-table">
     <thead>
@@ -44,7 +47,10 @@
     <tbody>
         {% for shop in all_shops%}
 		<tr>
-			<td><a href="{{ url_for('view_shop',shopurl=shop[4]) }}">{{ shop[1] }}</a></td>
+			<td>
+                <img height="32" src="{{ url_for('static',filename='gravatar.png') }}"/>
+                <a href="{{ url_for('view_shop',shopurl=shop[4]) }}">{{ shop[1] }}</a>
+            </td>
             <td>{{ shop[2] }}</td>
             <td>{{ shop[3] }}</td>
 		</tr>

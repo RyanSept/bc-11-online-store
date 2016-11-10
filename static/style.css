@@ -87,13 +87,16 @@ form dd{
 
 .table th, table td{
     border-color: darkseagreen !important;
+    border-top: none !important;
+    padding: 20px;
 }
-.products-table{
+.products-table, .all-stores-table, .my-stores-table{
     -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.13);
     box-shadow: 0 1px 3px rgba(0,0,0,.13);
     padding: 10px 5px 10px 5px;
-    background-color: white
+    background-color: white;
 }
+
 
 .products-table th, .products-table td{
     border-top: none !important;

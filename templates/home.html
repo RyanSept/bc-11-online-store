@@ -9,12 +9,15 @@
 <a href="{{url_for('create_store')}}">Create a new store</a>
 <br>
     {% if user_shops %}
-<table class="table">
+<table class="table my-stores-table">
+    <thead>
+        <tr>
+            <th>My stores</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
     <tbody>
-		<tr>
-			<td><strong>My stores</strong></td>
-            <td></td>
-		</tr>
         {% for shop in user_shops%}
 		<tr>
 			<td>{{ shop[1] }}</td>
@@ -29,7 +32,14 @@
     {% endif %}
 {% else %}  
 <p>All the shops on Agora</p>
-<table class="table">
+<table class="table all-stores-table">
+    <thead>
+        <tr>
+            <th>All stores</th>
+            <th>Description</th>
+            <th>Address</th>
+        </tr>
+    </thead>
     <tbody>
         {% for shop in all_shops%}
 		<tr>

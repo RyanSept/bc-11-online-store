@@ -8,12 +8,12 @@ app = Flask(__name__)
 
 # Load default config and override config from an environment variable
 app.config.update(dict(
-    DATABASE=os.path.join(app.root_path, 'agora.db'),
-    DEBUG=True,
-    SECRET_KEY='@agorakey#1',
-    USERNAME='admin',
-    PASSWORD='password',
-    SHOP_IN_VIEW='',  #id of shop currently being viewed
+    DATABASE = os.path.join(app.root_path, 'agora.db'),
+    DEBUG = True,
+    SECRET_KEY ='@agorakey#1',
+    USERNAME ='admin',
+    PASSWORD ='password',
+    SHOP_IN_VIEW ='',  #id of shop currently being viewed
     UPLOAD_FOLDER = 'uploads/',
     ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 ))
@@ -42,32 +42,59 @@ def check_password(username, password):
 		SELECT * FROM users WHERE user_name=? AND user_password=?
 		''',\
     	[username, password]).fetchall()
-	if len(res)>0:
+	if len(res) > 0:
 		return True
 	else:
 		return False
 
 def user_exists(username):
-	res = g.db.execute('SELECT * FROM users WHERE user_name=?',[username]).fetchall()
-	if len(res)>0:
+	'''
+	checks if user exists given the username
+	'''
+	res = g.db.execute('''
+		SELECT * FROM users WHERE user_name=?
+		''',[username]).fetchall()
+
+	if len(res) > 0:
 		return True
 	else:
 		return False
+
 def shop_exists(shop_name):
-	res = g.db.execute('SELECT * FROM shops WHERE shop_name=?',[shop_name]).fetchall()
-	if len(res)>0:
+	'''
+	checks if a shop exists given the username
+	'''
+	res = g.db.execute('''
+		SELECT * FROM shops WHERE shop_name=?
+		''',[shop_name]).fetchall()
+
+	if len(res) > 0:
 		return True
 	else:
 		return False
 
 def get_current_user_id():
-	res = g.db.execute('SELECT user_id FROM users WHERE user_name=?',
+	'''
+	gets the id of the current user as set after login,
+	returns an int
+	'''
+	res = g.db.execute('''
+		SELECT user_id FROM users WHERE user_name=?
+		''',
 		[app.config['USERNAME']]).fetchall()
-	if len(res)<=0:
+
+	if len(res) <= 0:
 		return False
-	return res[0][0]
+
+	return res[0][0] #first element in first row
 
 def get_current_user_shops():
+	'''
+	gets all the shops owned by the current user,
+	returns all rows (a list)
+	'''
+
+	#joins where ids intersect
 	res = g.db.execute('''
 		SELECT * FROM shop
 		INNER JOIN users_shop
@@ -77,13 +104,18 @@ def get_current_user_shops():
 		''',
 		[get_current_user_id()]).fetchall()
 
-	if len(res)<=0:
+	if len(res) <= 0:
 		return False
 
 	return res
 
-#gets products for specified shop
+
 def get_shop_products(shop_id):
+	'''
+	gets products for specified shop
+	'''
+
+	#joins where ids intersect
 	res = g.db.execute('''
 		SELECT * FROM products
 		INNER JOIN shop_products
@@ -93,7 +125,7 @@ def get_shop_products(shop_id):
 		''',
 		[shop_id]).fetchall()
 
-	if len(res)<=0:
+	if len(res) <= 0:
 		return False
 
 	return res

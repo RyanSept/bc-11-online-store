@@ -95,6 +95,7 @@ form dd{
     box-shadow: 0 1px 3px rgba(0,0,0,.13);
     padding: 10px 5px 10px 5px;
     background-color: white;
+    border-bottom: none !important;
 }
 
 
@@ -102,6 +103,9 @@ form dd{
     border-top: none !important;
 }
 
+.products-table tbody tr:hover{
+    background: rgba(0,0,0,0.07);
+}
 
 #about-shop{
     background: white;
@@ -119,4 +123,15 @@ form dd{
 
 .product-description{
     margin-top: 20px;
+}
+
+.product {
+    padding:20px;
+    background-color: white;
+    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+    transition: transform .3s ease-out;
+}
+.product:hover{
+    transform: translate(0px,-20px);
+    z-index: 1;
 }

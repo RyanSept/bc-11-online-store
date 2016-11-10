@@ -29,7 +29,7 @@ $(document).ready(function() {
     }
 </style>
 {% if session.logged_in %}
-<table class="table products-table">
+<table class="table products-table table-striped">
     <thead>
         <tr id="product-table-row-headers">
             <th>id <span class="glyphicon glyphicon-sort-by-attributes"></span></th>
@@ -60,12 +60,14 @@ $(document).ready(function() {
 {% else %}
 <div class="products-listing container">
 {% for product in products %}
+    <a href="{{ url_for('view_product',shopurl=shop_url,producturl=product[6]) }}">
     <div class="col-sm-4 product">
-        <img height="220" src ="{{ url_for('uploaded_file',filename=product[4]) }}"/>
-        <h4><a href="{{ url_for('view_product',shopurl=shop_url,producturl=product[6]) }}">{{ product[1] }}</a></h4>
+        <img class="center-block" height="220" src ="{{ url_for('uploaded_file',filename=product[4]) }}"/>
+        <h4>{{ product[1] }}</h4>
         <p id="price">{{ product[3] }} Kshs</p>
         <button type="button" class="btn btn-success">Add to cart</button>
     </div>
+    </a>
 {% endfor %}
 </div><!-- end of products-listing -->
 {% endif %}

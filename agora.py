@@ -178,7 +178,8 @@ def delete_product(product_id):
 @app.route('/')
 def homepage():
 	user_shops = get_current_user_shops()
-	all_shops = g.db.execute('SELECT * FROM shop')
+	all_shops = g.db.execute('SELECT * FROM shop').fetchall()
+
 	return render_template('home.html',user_shops=user_shops, all_shops=all_shops)
 
 @app.route('/login', methods=['GET', 'POST'])

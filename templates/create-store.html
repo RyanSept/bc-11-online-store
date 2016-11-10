@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
-  <h2>Create store</h2>
+<div class="container form-container col-md-4 col-md-offset-4">
+  <h3>Create store</h3>
   {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
   <form action="{{ url_for('create_store') }}" method=post>
     <dl>
@@ -8,13 +9,14 @@
         <dd><input type=text name="shopname">
             
         <dt>Store Description:
-        <dd><input type=textarea name="shopdescription">
+        <dd><textarea type=textarea name="shopdescription"></textarea>
         
         <dt>Store Address:
         <dd><input type=text name="shoplocation">
             
-        <dd><input type=submit value="Create Store">
+        <dd><input class="btn btn-default" type=submit value="Create Store">
         
     </dl>
   </form>
+</div>
 {% endblock %}

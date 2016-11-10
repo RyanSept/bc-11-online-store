@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
-
+<link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/megrim" type="text/css"/> 
 <div class="jumbotron home-jumbo">
     <h3>Welcome to Agora</h3>
 </div>
@@ -13,6 +13,7 @@
     <tbody>
 		<tr>
 			<td><strong>My stores</strong></td>
+            <td></td>
 		</tr>
         {% for shop in user_shops%}
 		<tr>
@@ -26,6 +27,19 @@
     {% else %}
     <p>You have no stores yet.</p>
     {% endif %}
+{% else %}  
+<p>All the shops on Agora</p>
+<table class="table">
+    <tbody>
+        {% for shop in all_shops%}
+		<tr>
+			<td><a href="{{ url_for('view_shop',shopurl=shop[4]) }}">{{ shop[1] }}</a></td>
+            <td>{{ shop[2] }}</td>
+            <td>{{ shop[3] }}</td>
+		</tr>
+        {% endfor %}
+	</tbody>
+</table>
 {% endif %}
 </div>
 {% endblock %}

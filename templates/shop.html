@@ -16,7 +16,8 @@ $(document).ready(function() {
 </div>
 {% if session.logged_in %}
     {% if owns_shop%}
-<a href="{{url_for('add_product')}}">Add new product to store</a>
+    <br>
+    <a href="{{url_for('add_product')}}">Add new product to store</a>
     {% endif %}
 {% endif %}
 
@@ -59,7 +60,7 @@ $(document).ready(function() {
 {% else %}
 <div class="products-listing container">
 {% for product in products %}
-    <div class="col-sm-4">
+    <div class="col-sm-4 product">
         <img height="220" src ="{{ url_for('uploaded_file',filename=product[4]) }}"/>
         <h4><a href="{{ url_for('view_product',shopurl=shop_url,producturl=product[6]) }}">{{ product[1] }}</a></h4>
         <p id="price">{{ product[3] }} Kshs</p>

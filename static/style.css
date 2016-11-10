@@ -8,6 +8,12 @@ body{
     background-color: #222222;
 }
 
+.home-jumbo{
+    padding-left: 20px;
+    font-family: 'Megrim';
+    font-size: 3em;
+}
+
 #price{
     color: #77a464;
     font-size: 1.25em
@@ -60,6 +66,10 @@ form dd{
 .navbar-default .navbar-nav > li > a:hover{
     color: white;
 }
+
+.table th, table td{
+    border-color: darkseagreen !important;
+}
 .products-table{
     -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.13);
     box-shadow: 0 1px 3px rgba(0,0,0,.13);
@@ -69,4 +79,23 @@ form dd{
 
 .products-table th, .products-table td{
     border-top: none !important;
+}
+
+
+#about-shop{
+    background: white;
+    padding: 20px
+}
+
+.products-listing .product{
+    margin-top: 20px;
+}
+
+.product-summary, .product-description{
+    background: white;
+    padding: 20px;
+}
+
+.product-description{
+    margin-top: 20px;
 }

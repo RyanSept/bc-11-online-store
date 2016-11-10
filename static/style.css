@@ -8,10 +8,28 @@ body{
     background-color: #222222;
 }
 
+footer{
+    height: 3.5em;
+    margin-top: 20px;
+    background: #222;
+    position: fixed;
+    left:0px;
+    bottom:0px;
+}
+
+footer p{
+    color: #777;
+    text-align: center;
+    margin-top: 15px;
+}
 .home-jumbo{
     padding-left: 20px;
     font-family: 'Megrim';
     font-size: 3em;
+}
+
+.content{
+    min-height: 100vh;
 }
 
 #price{

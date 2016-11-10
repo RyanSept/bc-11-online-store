@@ -33,7 +33,9 @@
         {% for message in get_flashed_messages() %}
         <div class="flash alert alert-info">{{ message }}</div>
         {% endfor %}
-        {% block body %}{% endblock %}
- 
+        <div class="content">{% block body %}{% endblock %}</div>
+    <footer class="col-md-12">
+        <p>BC-11 by Ryan Marvin</p>
+    </footer>
     </body>
 </html>

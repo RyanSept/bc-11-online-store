@@ -19,6 +19,7 @@ app.config.update(dict(
 ))
 app.config.from_envvar('AGORA_SETTINGS', silent=True)
 
+#connect to database
 def connect_db():
 	return sqlite3.connect(app.config['DATABASE'])
 	
@@ -34,7 +35,12 @@ def teardown_request(exception):
         db.close()
 
 def check_password(username, password):
-	res = g.db.execute('SELECT * FROM users WHERE user_name=? AND user_password=?',\
+	'''
+	checks if username and password match
+	'''
+	res = g.db.execute('''
+		SELECT * FROM users WHERE user_name=? AND user_password=?
+		''',\
     	[username, password]).fetchall()
 	if len(res)>0:
 		return True

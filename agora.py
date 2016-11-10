@@ -206,6 +206,8 @@ def homepage():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
+    if app.config['USERNAME'] != '':
+    	return redirect(url_for('homepage'))
     if request.method == 'POST':
     	res = check_password(request.form['username'],request.form['password'])
 

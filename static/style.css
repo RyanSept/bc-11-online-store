@@ -67,6 +67,7 @@ input[type=text],input[type=password], input[type=search],textarea{
     border:none;
     border-bottom:1px solid #77a464;
     transition: border-bottom-width 0.3s;
+    background: rgba(0,0,0,0);
 }
 input[type=search]{
     display:inline;

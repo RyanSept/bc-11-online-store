@@ -24,7 +24,7 @@
                     <li><a href="#">or</a></li>
                     <li><a href="{{ url_for('sign_up') }}"><span class="glyphicon glyphicon-log-in"></span> sign up</a></li>
                     {% else %}
-                    <li><a href="#">{{config['USERNAME']}}</a></li>
+                    <li><a href="#">{{session['USERNAME']}}</a></li>
                     <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span> log out</a></li>
                      {% endif %}
                 </ul>

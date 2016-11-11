@@ -73,6 +73,13 @@ def shop_exists(shop_name):
 	else:
 		return False
 
+def get_current_user_name():
+	try:
+		user_name = session['USERNAME']
+	except:
+		user_name = ''
+	return user_name
+
 def get_current_user_id():
 	'''
 	gets the id of the current user as set after login,
@@ -81,7 +88,7 @@ def get_current_user_id():
 	res = g.db.execute('''
 		SELECT user_id FROM users WHERE user_name=?
 		''',
-		[app.config['USERNAME']]).fetchall()
+		[get_current_user_name()]).fetchall()
 
 	if len(res) <= 0:
 		return False
@@ -214,17 +221,18 @@ def login():
         if not res:
         	error = 'Invalid username or password'
         else:
-			app.config['USERNAME'] = request.form['username']
+			session['USERNAME'] = request.form['username']
 			session['logged_in'] = True
-			flash('You are logged in as ' + app.config['USERNAME'])
+			flash('You are logged in as ' + session['USERNAME'])
 			return redirect(url_for('homepage'))
+
 
     return render_template('login.html', error=error)
 
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
-    app.config['USERNAME'] = ''
+    session['USERNAME'] = ''
     flash('You are logged out')
     return redirect(url_for('homepage'))
 
@@ -300,7 +308,7 @@ def view_shop(shopurl):
 	error = None
 	if len(shop_data)<=0:
 		abort(404)
-	shop_id = app.config['SHOP_IN_VIEW'] = shop_data[0][3]
+	shop_id = session['SHOP_IN_VIEW'] = shop_data[0][3]
 
 	products = get_shop_products(shop_id)
 
